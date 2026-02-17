@@ -38,7 +38,7 @@ const Cart = () => {
 
   if (!isOpen) return null
 
-  const total = items.reduce((acc, item) => acc + item.price, 0)
+  const total = items.reduce((acc, item) => acc + item.preco, 0)
 
   return (
     <Overlay onClick={() => dispatch(close())}>
@@ -47,11 +47,11 @@ const Cart = () => {
           <>
             {items.map((item, index) => (
               <Item key={index}>
-                <ItemImage src={item.image} />
+                <ItemImage src={item.foto} />
 
                 <ItemInfo>
-                  <ItemTitle>{item.name}</ItemTitle>
-                  <ItemPrice>R$ {item.price.toFixed(2)}</ItemPrice>
+                  <ItemTitle>{item.nome}</ItemTitle>
+                  <ItemPrice>R$ {item.preco.toFixed(2)}</ItemPrice>
                 </ItemInfo>
 
                 <Trash onClick={() => dispatch(remove(item.id))}>

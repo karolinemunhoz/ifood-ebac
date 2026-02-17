@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { Restaurant } from '../../mock/restaurants'
+import { Restaurant } from '../../types'
 import {
   Card,
   Image,
@@ -19,27 +19,24 @@ type Props = {
 const RestaurantCard = ({ restaurant }: Props) => {
   const navigate = useNavigate()
 
-  const handleSaibasMais = () => {
-    navigate(`/restaurant/${restaurant.id}`)
-  }
-
   return (
     <Card>
-      <Image src={restaurant.image} alt={restaurant.title} />
+      <Image src={restaurant.capa} alt={restaurant.titulo} />
 
       <Info>
-        <Title>{restaurant.title}</Title>
-        <Rating>{restaurant.rating} ⭐</Rating>
+        <Title>{restaurant.titulo}</Title>
+        <Rating>{restaurant.avaliacao} ⭐</Rating>
       </Info>
 
-      <Description>{restaurant.description}</Description>
+      <Description>{restaurant.descricao}</Description>
 
       <TagsContainer>
-        {restaurant.infos.map((info) => (
-          <Tag key={info}>{info}</Tag>
-        ))}
+        <Tag>{restaurant.tipo}</Tag>
       </TagsContainer>
-      <Button onClick={handleSaibasMais}>Saiba mais</Button>
+
+      <Button onClick={() => navigate(`/restaurant/${restaurant.id}`)}>
+        Saiba mais
+      </Button>
     </Card>
   )
 }

@@ -15,6 +15,17 @@ export const Title = styled.h3`
 export const Description = styled.p`
   font-size: 14px;
   margin-bottom: 8px;
+
+  height: 88px;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: ${cores.bege};
+  }
 `
 
 export const Button = styled.button`
