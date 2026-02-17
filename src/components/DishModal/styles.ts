@@ -29,8 +29,8 @@ export const Container = styled.div`
 `
 
 export const Image = styled.img`
-  width: 320px;
-  height: 240px;
+  width: 280px;
+  height: 280px;
   object-fit: cover;
   display: block;
   flex-shrink: 0;
