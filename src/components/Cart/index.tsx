@@ -1,184 +1,188 @@
-import { useSelector, useDispatch } from 'react-redux'
+import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../store'
 import {
-  remove,
   close,
+  remove,
   goToDelivery,
   goToPayment,
-  goToConfirmation,
   backToCart,
-  backToDelivery
+  backToDelivery,
+  goToConfirmation,
+  clear
 } from '../../store/reducers/cartSlice'
 
-import lixo from '../../assets/images/lixeira.png'
+import { useCheckoutMutation, CheckoutRequest } from '../../services/api'
+import Checkout from '../Checkout'
 
-import {
-  Overlay,
-  Container,
-  Item,
-  ItemImage,
-  ItemInfo,
-  ItemTitle,
-  ItemPrice,
-  Trash,
-  Total,
-  Checkout,
-  FormTitle,
-  Input,
-  Row,
-  Button,
-  TextArea,
-  Message,
-  Label
-} from './styles'
+import lixo from '../../assets/images/lixeira.png'
+import * as S from './styles'
 
 const Cart = () => {
   const dispatch = useDispatch()
   const { items, step, isOpen } = useSelector((state: RootState) => state.cart)
 
+  const [checkoutApi, { isLoading }] = useCheckoutMutation()
+  const [orderId, setOrderId] = useState<string | null>(null)
+
+  const [deliveryData, setDeliveryData] = useState({
+    receiver: '',
+    address: '',
+    city: '',
+    zipCode: '',
+    number: '',
+    complement: ''
+  })
+
+  const [paymentData, setPaymentData] = useState({
+    cardName: '',
+    cardNumber: '',
+    cvv: '',
+    expiresMonth: '',
+    expiresYear: ''
+  })
+
+  const [errors, setErrors] = useState<Record<string, boolean>>({})
+
   if (!isOpen) return null
 
   const total = items.reduce((acc, item) => acc + item.preco, 0)
 
+  const validateDelivery = () => {
+    const newErrors: Record<string, boolean> = {}
+    Object.entries(deliveryData).forEach(([key, value]) => {
+      if (!value && key !== 'complement') newErrors[key] = true
+    })
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const validatePayment = () => {
+    const newErrors: Record<string, boolean> = {}
+    Object.entries(paymentData).forEach(([key, value]) => {
+      if (!value) newErrors[key] = true
+    })
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const handleCheckout = async () => {
+    if (!validatePayment()) return
+
+    try {
+      const checkoutBody: CheckoutRequest = {
+        products: items.map((item) => ({
+          id: item.id,
+          price: Math.round(item.preco)
+        })),
+        delivery: {
+          receiver: deliveryData.receiver,
+          address: deliveryData.address,
+          city: deliveryData.city,
+          zipCode: deliveryData.zipCode.replace(/\D/g, ''),
+          number: Number(deliveryData.number), // número convertido aqui
+          complement: deliveryData.complement
+        },
+        payment: {
+          card: {
+            name: paymentData.cardName,
+            number: paymentData.cardNumber.replace(/\s/g, ''),
+            code: Number(paymentData.cvv),
+            expires: {
+              month: Number(paymentData.expiresMonth),
+              year: Number(paymentData.expiresYear)
+            }
+          }
+        }
+      }
+
+      const response = await checkoutApi(checkoutBody).unwrap()
+      setOrderId(response.orderId)
+      dispatch(goToConfirmation())
+    } catch (err) {
+      console.error(err)
+      alert('Erro ao finalizar pedido')
+    }
+  }
+
+  const handleFinish = () => {
+    dispatch(clear())
+    dispatch(close())
+    setOrderId(null)
+    setDeliveryData({
+      receiver: '',
+      address: '',
+      city: '',
+      zipCode: '',
+      number: '',
+      complement: ''
+    })
+    setPaymentData({
+      cardName: '',
+      cardNumber: '',
+      cvv: '',
+      expiresMonth: '',
+      expiresYear: ''
+    })
+  }
+
   return (
-    <Overlay onClick={() => dispatch(close())}>
-      <Container onClick={(e) => e.stopPropagation()}>
+    <S.Overlay onClick={() => dispatch(close())}>
+      <S.Container onClick={(e) => e.stopPropagation()}>
         {step === 'cart' && (
           <>
-            {items.map((item) => (
-              <Item key={item.cartId}>
-                <ItemImage src={item.foto} />
+            {items.length === 0 ? (
+              <S.Message>O carrinho está vazio, adicione produtos.</S.Message>
+            ) : (
+              <>
+                {items.map((item) => (
+                  <S.Item key={item.cartId}>
+                    <S.ItemImage src={item.foto} alt={item.nome} />
+                    <S.ItemInfo>
+                      <S.ItemTitle>{item.nome}</S.ItemTitle>
+                      <S.ItemPrice>R$ {item.preco.toFixed(2)}</S.ItemPrice>
+                    </S.ItemInfo>
+                    <S.Trash onClick={() => dispatch(remove(item.cartId))}>
+                      <img src={lixo} alt="Remover" />
+                    </S.Trash>
+                  </S.Item>
+                ))}
 
-                <ItemInfo>
-                  <ItemTitle>{item.nome}</ItemTitle>
-                  <ItemPrice>R$ {item.preco.toFixed(2)}</ItemPrice>
-                </ItemInfo>
+                <S.Total>
+                  <span>Valor total</span>
+                  <span>R$ {total.toFixed(2)}</span>
+                </S.Total>
 
-                <Trash onClick={() => dispatch(remove(item.cartId))}>
-                  <img src={lixo} alt="remover" />
-                </Trash>
-              </Item>
-            ))}
-
-            <Total>
-              <span>Valor total</span>
-              <span>R$ {total.toFixed(2)}</span>
-            </Total>
-
-            <Checkout onClick={() => dispatch(goToDelivery())}>
-              Continuar com a entrega
-            </Checkout>
+                <S.Checkout onClick={() => dispatch(goToDelivery())}>
+                  Continuar com a entrega
+                </S.Checkout>
+              </>
+            )}
           </>
         )}
 
-        {step === 'delivery' && (
-          <>
-            <FormTitle>Entrega</FormTitle>
-
-            <Label>Quem irá receber</Label>
-            <Input />
-
-            <Label>Endereço</Label>
-            <Input />
-
-            <Label>Cidade</Label>
-            <Input />
-
-            <Row>
-              <div style={{ flex: 1 }}>
-                <Label>CEP</Label>
-                <Input />
-              </div>
-
-              <div style={{ flex: 1 }}>
-                <Label>Número</Label>
-                <Input />
-              </div>
-            </Row>
-
-            <Label>Complemento (opcional)</Label>
-            <TextArea />
-
-            <Button onClick={() => dispatch(goToPayment())}>
-              Continuar para o pagamento
-            </Button>
-
-            <Button onClick={() => dispatch(backToCart())}>
-              Voltar para o carrinho
-            </Button>
-          </>
+        {step !== 'cart' && (
+          <Checkout
+            step={step}
+            total={total}
+            deliveryData={deliveryData}
+            paymentData={paymentData}
+            setDeliveryData={setDeliveryData}
+            setPaymentData={setPaymentData}
+            errors={errors}
+            validateDelivery={validateDelivery}
+            validatePayment={validatePayment}
+            goToPayment={() => dispatch(goToPayment())}
+            backToCart={() => dispatch(backToCart())}
+            backToDelivery={() => dispatch(backToDelivery())}
+            handleCheckout={handleCheckout}
+            handleFinish={handleFinish}
+            orderId={orderId}
+            isLoading={isLoading}
+          />
         )}
-
-        {step === 'payment' && (
-          <>
-            <FormTitle>
-              Pagamento - Valor a pagar R$ {total.toFixed(2)}
-            </FormTitle>
-
-            <Label>Nome no cartão</Label>
-            <Input />
-
-            <Row>
-              <div style={{ flex: 1 }}>
-                <Label>Número do cartão</Label>
-                <Input />
-              </div>
-
-              <div style={{ flex: 1 }}>
-                <Label>CVV</Label>
-                <Input />
-              </div>
-            </Row>
-
-            <Row>
-              <div style={{ flex: 1 }}>
-                <Label>Mês de vencimento</Label>
-                <Input />
-              </div>
-
-              <div style={{ flex: 1 }}>
-                <Label>Ano de vencimento</Label>
-                <Input />
-              </div>
-            </Row>
-
-            <Button onClick={() => dispatch(goToConfirmation())}>
-              Finalizar pagamento
-            </Button>
-
-            <Button onClick={() => dispatch(backToDelivery())}>
-              Voltar para a edição de endereço
-            </Button>
-          </>
-        )}
-
-        {step === 'confirmation' && (
-          <>
-            <FormTitle>Pedido realizado - 12345</FormTitle>
-
-            <Message>
-              Estamos felizes em informar que seu pedido já está em processo de
-              preparação e, em breve, será entregue no endereço fornecido.
-              <br />
-              <br />
-              Gostaríamos de ressaltar que nossos entregadores não estão
-              autorizados a realizar cobranças extras.
-              <br />
-              <br />
-              Lembre-se da importância de higienizar as mãos após o recebimento
-              do pedido, garantindo assim sua segurança e bem-estar durante a
-              refeição.
-              <br />
-              <br />
-              Esperamos que desfrute de uma deliciosa e agradável experiência
-              gastronômica. Bom apetite!
-            </Message>
-
-            <Button onClick={() => dispatch(close())}>Concluir</Button>
-          </>
-        )}
-      </Container>
-    </Overlay>
+      </S.Container>
+    </S.Overlay>
   )
 }
 

@@ -17,7 +17,7 @@ export const Container = styled.div`
   padding: 8px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
 
   @media (max-width: ${breakpoints.desktop}) {
     width: 60%;
@@ -93,22 +93,22 @@ export const Checkout = styled.button`
 `
 
 export const FormTitle = styled.h2`
-  color: ${cores.branco};
+  color: ${cores.bege};
   font-size: 16px;
   margin-bottom: 16px;
 `
 
-export const Input = styled.input`
+export const Input = styled.input<{ $hasError?: boolean }>`
   background: ${cores.bege};
-  border: none;
+  border: ${(props) => (props.$hasError ? '2px solid red' : 'none')};
   padding: 8px;
   width: 100%;
   margin-bottom: 8px;
 `
 
-export const TextArea = styled.textarea`
+export const TextArea = styled.textarea<{ $hasError?: boolean }>`
   background: ${cores.bege};
-  border: none;
+  border: ${(props) => (props.$hasError ? '2px solid red' : 'none')};
   padding: 8px;
   width: 100%;
   margin-bottom: 8px;
@@ -116,7 +116,7 @@ export const TextArea = styled.textarea`
 
 export const Row = styled.div`
   display: flex;
-  gap: 8px;
+  gap: 30px;
 `
 
 export const Button = styled.button`

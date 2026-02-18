@@ -43,6 +43,11 @@ const cartSlice = createSlice({
       state.step = 'cart'
     },
 
+    clear: (state) => {
+      state.items = []
+      state.step = 'cart'
+    },
+
     goToDelivery: (state) => {
       state.step = 'delivery'
     },
@@ -71,6 +76,7 @@ export const {
   remove,
   open,
   close,
+  clear,
   goToDelivery,
   goToPayment,
   goToConfirmation,
