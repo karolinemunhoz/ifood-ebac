@@ -17,7 +17,7 @@ export const Container = styled.div`
   padding: 24px;
   max-width: 1024px;
   width: 90%;
-  height: 344px;
+  min-height: 344px;
   color: ${cores.branco};
   position: relative;
   display: flex;
@@ -29,6 +29,10 @@ export const Container = styled.div`
     align-items: center;
     padding: 16px;
     width: 95%;
+  }
+
+  @media (max-width: ${breakpoints.desktop}) {
+    max-width: 600px;
   }
 `
 
@@ -51,6 +55,10 @@ export const Title = styled.h2`
   margin-bottom: 16px;
   font-size: 18px;
   font-weight: bold;
+
+  @media (max-width: ${breakpoints.desktop}) {
+    align-self: center;
+  }
 `
 
 export const Description = styled.p`

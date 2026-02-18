@@ -19,6 +19,10 @@ export const Container = styled.div`
   flex-direction: column;
   gap: 16px;
 
+  @media (max-width: ${breakpoints.desktop}) {
+    width: 60%;
+  }
+
   @media (max-width: ${breakpoints.tablet}) {
     width: 80%;
   }
