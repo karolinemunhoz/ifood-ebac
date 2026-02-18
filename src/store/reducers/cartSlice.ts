@@ -1,7 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Dish } from '../types'
+import { Dish } from '../../types'
 
-type CartItem = Dish
+type CartItem = Dish & {
+  cartId: string
+}
 
 type CartState = {
   items: CartItem[]
@@ -20,13 +22,16 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     add: (state, action: PayloadAction<Dish>) => {
-      state.items.push(action.payload)
+      state.items.push({
+        ...action.payload,
+        cartId: crypto.randomUUID()
+      })
       state.isOpen = true
       state.step = 'cart'
     },
 
-    remove: (state, action: PayloadAction<number>) => {
-      state.items = state.items.filter((item) => item.id !== action.payload)
+    remove: (state, action: PayloadAction<string>) => {
+      state.items = state.items.filter((item) => item.cartId !== action.payload)
     },
 
     open: (state) => {

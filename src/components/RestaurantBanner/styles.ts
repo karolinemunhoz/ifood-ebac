@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { cores } from '../../styles'
+import { breakpoints } from '../../styles'
 
 export const Container = styled.section`
   height: 280px;
@@ -30,9 +31,17 @@ export const Category = styled.span`
   display: block;
   margin-bottom: 150px;
   font-weight: 100;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    font-size: 20px;
+  }
 `
 
 export const Title = styled.h2`
   font-size: 32px;
   font-weight: bold;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    font-size: 24px;
+  }
 `

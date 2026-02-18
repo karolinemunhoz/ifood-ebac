@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { cores } from '../../styles'
+import { breakpoints } from '../../styles'
 
 export const Overlay = styled.div`
   position: fixed;
@@ -7,6 +8,7 @@ export const Overlay = styled.div`
   display: flex;
   justify-content: flex-end;
   z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.7);
 `
 
 export const Container = styled.div`
@@ -16,6 +18,10 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 80%;
+  }
 `
 
 export const Item = styled.div`

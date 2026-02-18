@@ -8,7 +8,7 @@ import {
   goToConfirmation,
   backToCart,
   backToDelivery
-} from '../../store/cartSlice'
+} from '../../store/reducers/cartSlice'
 
 import lixo from '../../assets/images/lixeira.png'
 
@@ -45,8 +45,8 @@ const Cart = () => {
       <Container onClick={(e) => e.stopPropagation()}>
         {step === 'cart' && (
           <>
-            {items.map((item, index) => (
-              <Item key={index}>
+            {items.map((item) => (
+              <Item key={item.cartId}>
                 <ItemImage src={item.foto} />
 
                 <ItemInfo>
@@ -54,7 +54,7 @@ const Cart = () => {
                   <ItemPrice>R$ {item.preco.toFixed(2)}</ItemPrice>
                 </ItemInfo>
 
-                <Trash onClick={() => dispatch(remove(item.id))}>
+                <Trash onClick={() => dispatch(remove(item.cartId))}>
                   <img src={lixo} alt="remover" />
                 </Trash>
               </Item>

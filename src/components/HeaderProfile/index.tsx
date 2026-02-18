@@ -1,9 +1,9 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '../../store'
-import { open } from '../../store/cartSlice'
+import { open } from '../../store/reducers/cartSlice'
 
 import logo from '../../assets/images/logo.png'
-import { Container, Content, LinkHome, Cart } from './styles'
+import { Container, Content, LinkHome, Cart, Logo } from './styles'
 
 const HeaderProfile = () => {
   const dispatch = useDispatch()
@@ -16,7 +16,7 @@ const HeaderProfile = () => {
         <Content>
           <LinkHome to="/">Restaurantes</LinkHome>
 
-          <img src={logo} alt="eFood" />
+          <Logo src={logo} alt="eFood" />
 
           <Cart onClick={() => dispatch(open())}>
             {items.length} produto(s) no carrinho

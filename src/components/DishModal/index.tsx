@@ -11,7 +11,7 @@ import {
   Content,
   Serve
 } from './styles'
-import { add, open } from '../../store/cartSlice'
+import { add, open } from '../../store/reducers/cartSlice'
 
 type Props = {
   dish: Dish

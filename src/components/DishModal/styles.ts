@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { cores } from '../../styles'
+import { breakpoints } from '../../styles'
 
 export const Overlay = styled.div`
   position: fixed;
@@ -22,9 +23,11 @@ export const Container = styled.div`
   align-items: flex-start;
   gap: 24px;
 
-  @media (max-width: 767px) {
+  @media (max-width: ${breakpoints.tablet}) {
     flex-direction: column;
     align-items: center;
+    padding: 16px;
+    width: 95%;
   }
 `
 
@@ -36,6 +39,11 @@ export const Image = styled.img`
   flex-shrink: 0;
   border-radius: 4px;
   margin-right: 24px;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    width: 200px;
+    height: 200px;
+  }
 `
 
 export const Title = styled.h2`
@@ -75,6 +83,10 @@ export const Button = styled.button`
   align-self: flex-start;
   cursor: pointer;
   margin-bottom: 20px;
+
+  @media (max-width: ${breakpoints.tablet}) {
+    align-self: center;
+  }
 `
 
 export const Content = styled.div`
