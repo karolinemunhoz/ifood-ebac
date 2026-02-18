@@ -40,6 +40,6 @@ export const Button = styled.button`
 
 export const Image = styled.img`
   width: 100%;
-  height: 217px;
+  height: 168px;
   object-fit: cover;
 `

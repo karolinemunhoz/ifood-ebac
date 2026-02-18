@@ -14,7 +14,7 @@ export const Overlay = styled.div`
 export const Container = styled.div`
   width: 360px;
   background-color: ${cores.rosa};
-  padding: 16px;
+  padding: 8px;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -30,6 +30,7 @@ export const Item = styled.div`
   background-color: ${cores.bege};
   padding: 8px;
   gap: 8px;
+  position: relative;
 `
 
 export const ItemImage = styled.img`
@@ -44,16 +45,20 @@ export const ItemInfo = styled.div`
 
 export const ItemTitle = styled.h3`
   color: ${cores.rosa};
-  font-size: 16px;
-  margin-bottom: 8px;
+  font-size: 18px;
+  margin-bottom: 16px;
 `
 
 export const ItemPrice = styled.p`
   color: ${cores.rosa};
   font-size: 14px;
+  margin-bottom: 33px;
 `
 
 export const Trash = styled.button`
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
   background: none;
   border: none;
   cursor: pointer;
@@ -66,9 +71,10 @@ export const Trash = styled.button`
 export const Total = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-top: 16px;
+  margin-top: 40px;
   font-weight: bold;
-  color: ${cores.branco};
+  font-size: 14px;
+  color: ${cores.bege};
 `
 
 export const Checkout = styled.button`
@@ -76,7 +82,8 @@ export const Checkout = styled.button`
   background-color: ${cores.bege};
   color: ${cores.rosa};
   border: none;
-  padding: 8px;
+  padding: 4px;
+  font-size: 14px;
   font-weight: bold;
   cursor: pointer;
 `

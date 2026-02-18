@@ -6,6 +6,7 @@ export const Card = styled.div`
   overflow: hidden;
   position: relative;
   border: 1px solid ${cores.rosa};
+  max-width: 472px;
 `
 
 export const Image = styled.img`

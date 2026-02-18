@@ -17,6 +17,7 @@ export const Container = styled.div`
   padding: 24px;
   max-width: 1024px;
   width: 90%;
+  height: 344px;
   color: ${cores.branco};
   position: relative;
   display: flex;
